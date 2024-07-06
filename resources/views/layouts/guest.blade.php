@@ -11,6 +11,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        {{-- FontAwesomeIcons  --}}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -18,7 +21,7 @@
         @livewireStyles
     </head>
     <body>
-        <div class="font-sans text-gray-900 dark:text-gray-100 antialiased">
+        <div class="font-sans antialiased">
             {{ $slot }}
         </div>
 
