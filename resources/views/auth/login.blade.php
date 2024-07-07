@@ -38,7 +38,8 @@
                     </header>
 
                     {{-- <x-chat-message> s --}}
-                        <section class="flex-grow overflow-y-scroll flex flex-col items-center justify-center gap-3">
+                        <section class="flex-grow overflow-y-scroll flex flex-col items-stretch justify-center gap-3 max-w-fit mx-auto">
+                            <a href="{{ route('auth.providers.redirect', ['provider' => 'discord']) }}" class="btn btn-outline"><i class="fa-brands fa-discord"></i> Continue with Discord</a>
                             <a href="{{ route('auth.providers.redirect', ['provider' => 'github']) }}" class="btn btn-outline"><i class="fa-brands fa-github"></i> Continue with Github</a>
                         </section>
             </section>

@@ -13,8 +13,14 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(\App\Contracts\AuthProvider::class, function ($app) {
-            if (request()->route('provider') === 'github') {
-                return $app->make(\App\Services\AuthProviders\GithubAuthProvider::class);
+            $provider = request()->route('provider');
+            switch ($provider) {
+                case 'github':
+                    return $app->make(\App\Services\AuthProviders\GithubAuthProvider::class);
+                case 'discord':
+                    return $app->make(\App\Services\AuthProviders\DiscordAuthProvider::class);
+                default:
+                    throw new \Exception('Invalid provider');
             }
 
             throw new \Exception('Invalid provider');
@@ -28,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('github', \SocialiteProviders\GitHub\Provider::class);
+        });
+
+        Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
+            $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
         });
     }
 }

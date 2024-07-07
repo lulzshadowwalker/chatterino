@@ -11,6 +11,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.0",
+        "socialiteproviders/discord": "^4.2",
         "socialiteproviders/github": "^4.1",
         "socialiteproviders/zoho": "^4.1"
     },
