@@ -13,6 +13,7 @@
         "livewire/livewire": "^3.0",
         "socialiteproviders/discord": "^4.2",
         "socialiteproviders/github": "^4.1",
+        "socialiteproviders/spotify": "^4.1",
         "socialiteproviders/zoho": "^4.1"
     },
     "require-dev": {

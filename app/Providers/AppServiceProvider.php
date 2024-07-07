@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
                     return $app->make(\App\Services\AuthProviders\GithubAuthProvider::class);
                 case 'discord':
                     return $app->make(\App\Services\AuthProviders\DiscordAuthProvider::class);
+                case 'spotify':
+                    return $app->make(\App\Services\AuthProviders\SpotifyAuthProvider::class);
                 default:
                     throw new \Exception('Invalid provider');
             }
@@ -38,6 +40,10 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
             $event->extendSocialite('discord', \SocialiteProviders\Discord\Provider::class);
+        });
+
+        Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
+            $event->extendSocialite('spotify', \SocialiteProviders\Spotify\Provider::class);
         });
     }
 }

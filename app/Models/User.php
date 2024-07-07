@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'github_id',
         'discord_id',
+        'spotify_id',
         'password',
     ];
 
