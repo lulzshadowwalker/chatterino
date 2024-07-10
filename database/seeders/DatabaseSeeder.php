@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Chat;
+use App\Models\Message;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +14,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        Chat::factory(30)
+            ->has(
+                Message::factory(10)
+                    ->state(function (array $attributes, Chat $chat) use ($users) {
+                        return [
+                            'user_id' => $users->random()->id,
+                            'chat_id' => $chat->id,
+                        ];
+                    })
+            )
+            ->create()
+            ->each(function (Chat $chat) use ($users) {
+                // Attach 2-5 random users to each chat
+                $chat->participants()->attach(
+                    $users->random(rand(2, 5))->pluck('id')->toArray()
+                );
+            });
     }
 }

@@ -15,9 +15,16 @@ class Message extends Model
 
     const TYPE_TEXT = 'TEXT';
 
+    protected $fillable = [
+        'type',
+        'content',
+        'user_id',
+        'chat_id',
+    ];
+
     public function sentAt(): Attribute
     {
-        return Attribute::make($this->created_at);
+        return Attribute::get(fn () => $this->created_at);
     }
 
     public function chat(): BelongsTo
@@ -27,6 +34,11 @@ class Message extends Model
 
     public function sender(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function sentByMe(): Attribute
+    {
+        return Attribute::get(fn () => $this->user_id === auth()->user()?->id);
     }
 }
