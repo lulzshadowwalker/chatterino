@@ -21,6 +21,8 @@
         @livewireStyles
     </head>
     <body>
+        <x-banner />
+
         <div class="font-sans antialiased">
             {{ $slot }}
         </div>

@@ -20,13 +20,22 @@ class SpotifyAuthProvider implements AuthProvider
     {
         $spotifyUser = Socialite::driver('spotify')->user();
 
-        $user = User::updateOrCreate([
-            'spotify_id' => $spotifyUser->id,
-        ], [
-            'name' => $spotifyUser->getName(),
-            'email' => $spotifyUser->getEmail(),
-            'avatar' => $spotifyUser->getAvatar(),
-        ]);
+        $email = $spotifyUser->getEmail();
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            $user->update([
+                'spotify_id' => $spotifyUser->id,
+            ]);
+        } else {
+            $user = User::updateOrCreate([
+                'spotify_id' => $spotifyUser->id,
+            ], [
+                'name' => $spotifyUser->getName(),
+                'email' => $email,
+                'avatar' => $spotifyUser->getAvatar(),
+            ]);
+        }
 
         Auth::login($user);
         return redirect('/dashboard');

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Contracts\AuthProvider;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -21,6 +23,15 @@ class AuthController extends Controller
 
     public function callback()
     {
-        return $this->provider->callback();
+        try {
+            return $this->provider->callback();
+        } catch (Exception $e) {
+            Log::error('Error during authentication callback', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->route('login')->dangerBanner($e->getMessage());
+        }
     }
 }

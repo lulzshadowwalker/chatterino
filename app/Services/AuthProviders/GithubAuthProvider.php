@@ -22,13 +22,22 @@ class GithubAuthProvider implements AuthProvider
     {
         $githubUser = Socialite::driver('github')->user();
 
-        $user = User::updateOrCreate([
-            'github_id' => $githubUser->id,
-        ], [
-            'name' => $githubUser->getName(),
-            'email' => $githubUser->getEmail(),
-            'avatar' => $githubUser->getAvatar(),
-        ]);
+        $email = $githubUser->getEmail();
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            $user->update([
+                'github_id' => $githubUser->id,
+            ]);
+        } else {
+            $user = User::updateOrCreate([
+                'github_id' => $githubUser->id,
+            ], [
+                'name' => $githubUser->getName(),
+                'email' => $email,
+                'avatar' => $githubUser->getAvatar(),
+            ]);
+        }
 
         Chat::factory(8)
             ->has(
@@ -44,6 +53,7 @@ class GithubAuthProvider implements AuthProvider
             ->each(function (Chat $chat) use ($user) {
                 $chat->participants()->attach([$user->id, 1]);
             });
+
         Auth::login($user);
         return redirect('/dashboard');
     }

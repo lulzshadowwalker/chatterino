@@ -18,13 +18,22 @@ class DiscordAuthProvider implements AuthProvider
     {
         $discordUser = Socialite::driver('discord')->user();
 
-        $user = User::updateOrCreate([
-            'discord_id' => $discordUser->id,
-        ], [
-            'name' => $discordUser->getName(),
-            'email' => $discordUser->getEmail(),
-            'avatar' => $discordUser->getAvatar(),
-        ]);
+        $email = $discordUser->getEmail();
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            $user->update([
+                'discord_id' => $discordUser->id,
+            ]);
+        } else {
+            $user = User::updateOrCreate([
+                'discord_id' => $discordUser->id,
+            ], [
+                'name' => $discordUser->getName(),
+                'email' => $email,
+                'avatar' => $discordUser->getAvatar(),
+            ]);
+        }
 
         Auth::login($user);
         return redirect('/dashboard');
